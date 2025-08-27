@@ -10,11 +10,9 @@ Check out the [screenshots/](./screenshots) folder for sample interactions with 
 
 There are tons of Weather APIs out there which are free to sign up and use, but for this PoC in particular I use the [OpenWeatherMap](https://openweathermap.org/) API. You can sign up on their site for free and get an API key which the bot can use to make requests to get the weather data.
 
-Once you have a working API key, replace the value for `openWeatherAPIKey` at the top of the [weather.ts](./bot/weather.ts#L4) file - also copied below.
-
-```
-const openWeatherAPIKey = "TODO-REPLACE-ME";
-```
+Once you have a working API key, store it in an environment variable named
+`OPENWEATHER_API_KEY`. The bot reads this value at runtime so secrets don't have
+to be committed to source control.
 
 ## Helpful Links
 

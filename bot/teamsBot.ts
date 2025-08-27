@@ -149,12 +149,12 @@ export class TeamsBot extends TeamsActivityHandler {
 
   async renderCoords(
     forecastType: "hourly" | "daily",
-    lat: number = null,
-    lon: number = null,
-    cityName: string = null,
-    countryCode: string = null
+    lat: number | null = null,
+    lon: number | null = null,
+    cityName: string | null = null,
+    countryCode: string | null = null
   ) {
-    if (!lat || !lon) {
+    if (lat === null || lon === null) {
       console.log("Retrieving Longitude and Latitude Coordinates");
       const weatherResp = await getHourlyForecast(cityName, countryCode);
       lat = weatherResp.city.coord.lat;
