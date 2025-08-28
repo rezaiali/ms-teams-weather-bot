@@ -152,11 +152,12 @@ export class TeamsBot extends TeamsActivityHandler {
     lat: number | null = null,
     lon: number | null = null,
     cityName: string | null = null,
-    countryCode: string | null = null
+    countryCode: string | null = null,
+    units: "standard" | "metric" | "imperial" = "imperial"
   ) {
     if (lat === null || lon === null) {
       console.log("Retrieving Longitude and Latitude Coordinates");
-      const weatherResp = await getHourlyForecast(cityName, countryCode);
+      const weatherResp = await getHourlyForecast(cityName, countryCode, units);
       lat = weatherResp.city.coord.lat;
       lon = weatherResp.city.coord.lon;
 
@@ -165,9 +166,11 @@ export class TeamsBot extends TeamsActivityHandler {
 
     console.log("Retrieving All-In-One Forecast");
 
-    const res = await getAllInOneForecast(lat, lon);
+    const res = await getAllInOneForecast(lat, lon, units);
 
     res.loc = cityName;
+    const tempUnit = units === "metric" ? "C" : "F";
+    const windSpeedUnit = units === "metric" ? "m/s" : "mph";
 
     console.log("Result:", JSON.stringify(res));
 
@@ -191,6 +194,8 @@ export class TeamsBot extends TeamsActivityHandler {
     return this.renderAdaptiveCard(card, {
       ...res,
       data: data,
+      tempUnit,
+      windSpeedUnit,
     });
   }
 
@@ -214,11 +219,14 @@ export class TeamsBot extends TeamsActivityHandler {
         break;
       }
       case "dailyForecastForReston": {
+        const { units } = invokeValue.action.data as Dictionary<string>;
         const card = await this.renderCoords(
           "daily",
           38.9687,
           -77.3411,
-          "Reston, VA"
+          "Reston, VA",
+          undefined,
+          units as "standard" | "metric" | "imperial"
         );
 
         await context.updateActivity({
@@ -230,11 +238,14 @@ export class TeamsBot extends TeamsActivityHandler {
       }
 
       case "todayForecastForReston": {
+        const { units } = invokeValue.action.data as Dictionary<string>;
         const card = await this.renderCoords(
           "hourly",
           38.9687,
           -77.3411,
-          "Reston, VA"
+          "Reston, VA",
+          undefined,
+          units as "standard" | "metric" | "imperial"
         );
 
         await context.updateActivity({
@@ -245,11 +256,14 @@ export class TeamsBot extends TeamsActivityHandler {
         break;
       }
       case "todayForecastForSacramento": {
+        const { units } = invokeValue.action.data as Dictionary<string>;
         const card = await this.renderCoords(
           "hourly",
           38.4666,
           -121.3177,
-          "Sacramento, CA"
+          "Sacramento, CA",
+          undefined,
+          units as "standard" | "metric" | "imperial"
         );
 
         await context.updateActivity({
@@ -260,11 +274,14 @@ export class TeamsBot extends TeamsActivityHandler {
         break;
       }
       case "dailyForecastForSacramento": {
+        const { units } = invokeValue.action.data as Dictionary<string>;
         const card = await this.renderCoords(
           "daily",
           38.4666,
           -121.3177,
-          "Sacramento, CA"
+          "Sacramento, CA",
+          undefined,
+          units as "standard" | "metric" | "imperial"
         );
 
         await context.updateActivity({
@@ -275,13 +292,14 @@ export class TeamsBot extends TeamsActivityHandler {
         break;
       }
       case "todayForecastWithCity": {
-        const { city, country } = invokeValue.action.data as Dictionary<string>;
+        const { city, country, units } = invokeValue.action.data as Dictionary<string>;
         const card = await this.renderCoords(
           "hourly",
           null,
           null,
           city,
-          country
+          country,
+          units as "standard" | "metric" | "imperial"
         );
 
         await context.updateActivity({
@@ -293,13 +311,14 @@ export class TeamsBot extends TeamsActivityHandler {
         break;
       }
       case "dailyForecastWithCity": {
-        const { city, country } = invokeValue.action.data as Dictionary<string>;
+        const { city, country, units } = invokeValue.action.data as Dictionary<string>;
         const card = await this.renderCoords(
           "daily",
           null,
           null,
           city,
-          country
+          country,
+          units as "standard" | "metric" | "imperial"
         );
 
         await context.updateActivity({

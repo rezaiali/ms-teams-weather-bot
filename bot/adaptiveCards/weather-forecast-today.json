@@ -2,7 +2,7 @@
   "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.5",
-  "speak": "<s>Weather forecast for ${formatEpoch(data[0].sunrise_ts, 'dddd')} is high of ${formatNumber(data[0].app_max_temp / 5 * 9 + 32, 0)} and low of ${formatNumber(data[0].app_min_temp / 5 * 9 + 32, 0)} degrees with a ${formatNumber(data[0].precip * 100, 0)}% chance of rain</s><s>Winds will be ${formatNumber(data[0].wind_gust_spd, 0)} mph from the ${data[0].wind_cdir}</s>",
+  "speak": "<s>Weather forecast for ${formatEpoch(data[0].sunrise_ts, 'dddd')} is high of ${formatNumber(data[0].app_max_temp, 0)}°${tempUnit} and low of ${formatNumber(data[0].app_min_temp, 0)}°${tempUnit} degrees with a ${formatNumber(data[0].precip * 100, 0)}% chance of rain</s><s>Winds will be ${formatNumber(data[0].wind_gust_spd, 0)} ${windSpeedUnit} from the ${data[0].wind_cdir}</s>",
   "backgroundImage": {
     "url": "https://messagecardplayground.azurewebsites.net/assets/Mostly%20Cloudy-Background.jpg"
   },
@@ -41,7 +41,7 @@
             },
             {
               "type": "TextBlock",
-              "text": "${formatNumber(hourly[0].feels_like, 0)} / ${formatNumber(hourly[0].temp, 0)}",
+              "text": "${formatNumber(hourly[0].feels_like, 0)}°${tempUnit} / ${formatNumber(hourly[0].temp, 0)}°${tempUnit}",
               "size": "Medium",
               "spacing": "None",
               "wrap": true
@@ -54,7 +54,7 @@
             },
             {
               "type": "TextBlock",
-              "text": "Winds ${hourly[0].wind_speed} mph ${hourly[0].wind_cdir}",
+              "text": "Winds ${hourly[0].wind_speed} ${windSpeedUnit} ${hourly[0].wind_cdir}",
               "spacing": "None",
               "wrap": true
             }
@@ -87,11 +87,11 @@
               "facts": [
                 {
                   "title": "Temp",
-                  "value": "${formatNumber(temp, 0)}"
+                  "value": "${formatNumber(temp, 0)}°${tempUnit}"
                 },
                 {
                   "title": "Feels Like",
-                  "value": "${formatNumber(feels_like, 0)}"
+                  "value": "${formatNumber(feels_like, 0)}°${tempUnit}"
                 }
               ]
             }
@@ -129,11 +129,11 @@
               "facts": [
                 {
                   "title": "Temp",
-                  "value": "${formatNumber(temp, 0)}"
+                  "value": "${formatNumber(temp, 0)}°${tempUnit}"
                 },
                 {
                   "title": "Feels Like",
-                  "value": "${formatNumber(feels_like, 0)}"
+                  "value": "${formatNumber(feels_like, 0)}°${tempUnit}"
                 }
               ]
             }
@@ -171,11 +171,11 @@
               "facts": [
                 {
                   "title": "Temp",
-                  "value": "${formatNumber(temp, 0)}"
+                  "value": "${formatNumber(temp, 0)}°${tempUnit}"
                 },
                 {
                   "title": "Feels Like",
-                  "value": "${formatNumber(feels_like, 0)}"
+                  "value": "${formatNumber(feels_like, 0)}°${tempUnit}"
                 }
               ]
             }
