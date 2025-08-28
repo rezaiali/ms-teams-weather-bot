@@ -1,7 +1,10 @@
 import axios from "axios";
 export const tzlookup = require("tz-lookup");
 
-const openWeatherAPIKey = "TODO-REPLACE-ME";
+// Read the OpenWeatherMap API key from environment variables so credentials
+// aren't hardcoded in source control. Fall back to a placeholder to help
+// developers notice when the key hasn't been configured yet.
+const openWeatherAPIKey = process.env.OPENWEATHER_API_KEY || "TODO-REPLACE-ME";
 
 export async function getHourlyForecast(
   cityName: string,
@@ -21,7 +24,7 @@ export async function getAllInOneForecast(
   lat: number,
   lon: number,
   units: "standard" | "metric" | "imperial" = "imperial",
-  exclude: Array<String> = ["minutely"]
+  exclude: string[] = ["minutely"]
 ): Promise<any> {
   const excludeVal = exclude.join(",").toLowerCase();
 
@@ -34,10 +37,10 @@ export async function getAllInOneForecast(
 
 export function weatherIconUrl(iconCode: string): string {
   /** Ref: https://openweathermap.org/weather-conditions */
-  return `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
+  return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 }
 
-export function getCardinalDirection(angle) {
+export function getCardinalDirection(angle: number): string {
   const directions = [
     "↑ N",
     "↗ NE",
@@ -52,8 +55,9 @@ export function getCardinalDirection(angle) {
 }
 
 export function toFahrenheit(kelvin: number): number {
-  // Convert a value in Kelvin to a value in Fahrenheit.
-  return 1.8 * (kelvin - 273) + 32;
+  // Convert a value in Kelvin to a value in Fahrenheit using the precise
+  // zero offset of 273.15.
+  return 1.8 * (kelvin - 273.15) + 32;
 }
 
 async function main() {
