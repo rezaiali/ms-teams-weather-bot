@@ -14,6 +14,23 @@
       "text": "Enter a preset city name, or manually enter a city / country.",
       "wrap": true,
       "spacing": "Medium"
+    },
+    {
+      "type": "Input.ChoiceSet",
+      "label": "Units",
+      "id": "units",
+      "value": "imperial",
+      "style": "compact",
+      "choices": [
+        {
+          "title": "Fahrenheit (°F)",
+          "value": "imperial"
+        },
+        {
+          "title": "Celsius (°C)",
+          "value": "metric"
+        }
+      ]
     }
   ],
   "actions": [
