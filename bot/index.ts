@@ -4,6 +4,8 @@ import * as restify from "restify";
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 import { BotFrameworkAdapter, TurnContext } from "botbuilder";
+import cron from "node-cron";
+import { subscriptionStore } from "./subscriptionStore";
 
 // This bot's main dialog.
 import { TeamsBot } from "./teamsBot";
@@ -44,6 +46,27 @@ adapter.onTurnError = onTurnErrorHandler;
 
 // Create the bot that will handle incoming messages.
 const bot = new TeamsBot();
+
+cron.schedule("* * * * *", async () => {
+  const now = new Date();
+  const current = now.toTimeString().slice(0, 5);
+  const subs = subscriptionStore.getSubscriptions();
+  for (const sub of subs) {
+    if (sub.time === current) {
+      const [city, country] = sub.location.split(",");
+      await adapter.continueConversation(sub.conversation, async (context) => {
+        const card = await bot.renderCoords(
+          "daily",
+          null,
+          null,
+          city,
+          country
+        );
+        await context.sendActivity({ attachments: [card] });
+      });
+    }
+  }
+});
 
 // Create HTTP server.
 const server = restify.createServer();
