@@ -16,6 +16,7 @@ import {
   tzlookup,
   getAllInOneForecast,
 } from "./weather";
+import { subscriptionStore } from "./subscriptionStore";
 
 const rawWelcomeCard = require("./adaptiveCards/welcome.json");
 const rawLearnCard = require("./adaptiveCards/learn.json");
@@ -49,7 +50,33 @@ export class TeamsBot extends TeamsActivityHandler {
       }
 
       // Trigger command by IM text
-      switch (txt) {
+      if (txt.startsWith("subscribe daily forecast")) {
+        const args = txt.replace("subscribe daily forecast", "").trim();
+        const parts = args.split(" ");
+        if (parts.length >= 2) {
+          const location = parts[0];
+          const time = parts[1];
+          const userId =
+            context.activity.from.aadObjectId || context.activity.from.id;
+          const conversation = TurnContext.getConversationReference(
+            context.activity
+          );
+          subscriptionStore.addSubscription({
+            userId,
+            location,
+            time,
+            conversation,
+          });
+          await context.sendActivity(
+            `Subscribed to daily forecast for ${location} at ${time}.`
+          );
+        } else {
+          await context.sendActivity(
+            "Usage: subscribe daily forecast <city,country> <HH:MM>"
+          );
+        }
+      } else {
+        switch (txt) {
         case "welcome": {
           const card = this.renderAdaptiveCard(rawWelcomeCard);
           await context.sendActivity({ attachments: [card] });
@@ -128,6 +155,7 @@ export class TeamsBot extends TeamsActivityHandler {
             "I don't know that request, but I'm still learning."
           );
           break;
+      }
       }
 
       // By calling next() you ensure that the next BotHandler is run.
